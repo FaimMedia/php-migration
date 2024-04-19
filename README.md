@@ -2,7 +2,7 @@
 
 Simple PHP migration library to use with any available PHP PDO driver.
 
-# Install
+## Install
 
 Install this library using composer:
 
@@ -11,7 +11,7 @@ composer require faimmedia/migration
 ```
 
 
-# Development
+## Development
 
 Start up docker containers:
 
