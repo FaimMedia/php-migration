@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.3/phpunit.xsd"
+	backupGlobals="true"
+	bootstrap="./Bootstrap.php"
+	cacheResultFile="../cache/phpunit/result.json"
+	colors="true"
+	processIsolation="false"
+	stopOnError="false"
+	stopOnFailure="false"
+	stopOnIncomplete="false"
+	stopOnSkipped="false"
+	stopOnRisky="false"
+	cacheDirectory="../cache/phpunit/"
+	backupStaticProperties="false"
+	requireCoverageMetadata="false"
+>
+	<testsuites>
+		<testsuite name="migration">
+			<directory>./Migration</directory>
+		</testsuite>
+	</testsuites>
+	<source>
+		<include>
+    		<directory suffix=".php">test</directory>
+		</include>
+	</source>
+</phpunit>

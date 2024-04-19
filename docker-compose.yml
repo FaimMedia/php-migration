@@ -1,0 +1,29 @@
+services:
+  postgres:
+    build:
+      context: .
+      dockerfile: ./docker/postgres/Dockerfile
+    environment:
+      POSTGRES_USER: migrate-test
+      POSTGRES_HOST_AUTH_METHOD: trust
+  test:
+    image: php:8.2-alpine3.19
+    volumes:
+      - ./src:/app/src
+      - ./test:/app/test
+      - ./vendor:/app/vendor
+    entrypoint:
+      - tail
+      - -f
+      - /dev/null
+    depends_on:
+      - composer
+  composer:
+    image: composer:2.7.2
+    volumes:
+      - ./vendor:/app/vendor:z
+      - ./composer.json:/app/composer.json:r
+    command:
+      - install
+      - --working-dir=/app
+      - --ignore-platform-reqs

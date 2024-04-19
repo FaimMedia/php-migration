@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+
+docker compose exec -T test /app/vendor/bin/phpunit -c /app/test/phpunit.xml

@@ -1,0 +1,28 @@
+{
+	"name": "faimmedia/migration",
+	"description": "FaimMedia Simple PHP Database Migration",
+	"version": "0.1",
+	"homepage": "https://faimmedia.nl",
+
+	"authors": [{
+		"name": "Tim Peters",
+		"role": "Lead Developer"
+	}],
+
+	"require": {
+		"php": "8.*",
+
+		"ext-pdo" : "*"
+	},
+
+	"require-dev": {
+		"phpunit/phpunit": "10.3"
+	},
+
+	"autoload": {
+		"psr-4": {
+			"FaimMedia\\Migration\\": "src/",
+			"FaimMedia\\Migration\\Test\\": "test/"
+		}
+	}
+}
