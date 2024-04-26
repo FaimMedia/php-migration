@@ -14,7 +14,9 @@ jobs:
   test:
     runs-on: ubuntu-latest
     container:
-      image: php:8.2-alpine3.19
+      build:
+        context: .
+        dockerfile: ./docker/php/Dockerfile
 
     services:
       postgres:
