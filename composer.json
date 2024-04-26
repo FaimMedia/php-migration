@@ -1,5 +1,6 @@
 {
 	"name": "faimmedia/migration",
+	"type": "library",
 	"description": "FaimMedia Simple PHP Database Migration",
 	"version": "0.1",
 	"homepage": "https://faimmedia.nl",

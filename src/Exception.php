@@ -27,6 +27,11 @@ class Exception extends BaseException
 	public const MISSING_FILE = -3;
 
 	/**
+	 * The sql file is empty and cannot used for migration
+	 */
+	public const EMPTY_FILE = -4;
+
+	/**
 	 * Trying to rollback a migration that isn't applied
 	 */
 	public const MIGRATION_NOT_APPLIED = -11;

@@ -21,6 +21,7 @@ class Migration
 
 	protected string $tableName = self::DEFAULT_TABLE_NAME;
 	protected string $path;
+	protected array $structure;
 
 	/**
 	 * Constructor
@@ -60,6 +61,7 @@ class Migration
 		}
 
 		$this->createMigrationTable();
+		$this->getStructure();
 	}
 
 	/**
@@ -91,10 +93,10 @@ class Migration
 	{
 		$this->pdo->query(<<<SQL
 			CREATE TABLE IF NOT EXISTS "{$this->tableName}" (
-				"version" int2 PRIMARY KEY,
+				"version" int2 NOT NULL,
 				"name" VARCHAR(255) NOT NULL,
 				"applied" TIMESTAMP NOT NULL,
-				UNIQUE("version", "name")
+				PRIMARY KEY ("version", "name")
 			);
 		SQL);
 	}
@@ -104,7 +106,50 @@ class Migration
 	 */
 	public function run(): void
 	{
+		$structure = $this->getStructure();
 
+		foreach ($structure as $version => $names) {
+			foreach ($names as $name) {
+				$this->importFile((int) $version, $name);
+			}
+		}
+	}
+
+	/**
+	 * Get folders and file structure
+	 */
+	public function getStructure(): array
+	{
+		if (isset($this->structure)) {
+			return $this->structure;
+		}
+
+		$files = glob($this->path . '*/*.sql');
+
+		$structure = [];
+		foreach ($files as $file) {
+			$relative = substr($file, strlen($this->path));
+
+			$versionNumber = dirname($relative);
+			$baseName = basename($relative, '.sql');
+
+			if (!ctype_digit($versionNumber) || strlen($versionNumber) !== 4) {
+				throw new Exception(
+					'Folder structure for version should be 4 digits, example: 0001',
+					Exception::FOLDER_STRUCTURE,
+				);
+			}
+
+			if (substr($baseName, -5) === '-down') {
+				continue;
+			}
+
+			$structure[$versionNumber][] = $baseName;
+		}
+
+		$this->structure = $structure;
+
+		return $this->structure;
 	}
 
 	/**
@@ -163,6 +208,17 @@ class Migration
 
 		$this->output(($downgrade ? 'Downgrading' : 'Migrating') . ' file ' . $fileName . '…');
 
+		$fopen = fopen($file, 'r');
+		$content = trim(fread($fopen, max(filesize($file), 0, 1)));
+		fclose($fopen);
+
+		if (!$content) {
+			throw new Exception(
+				'SQL file is empty: `' . $fileName . '`',
+				Exception::EMPTY_FILE,
+			);
+		}
+
 		/**
 		 * We skip transactional usage, if an transaction is already triggered
 		 */
@@ -171,10 +227,6 @@ class Migration
 		if ($useTransaction) {
 			$this->pdo->beginTransaction();
 		}
-
-		$fopen = fopen($file, 'r');
-		$content = fread($fopen, filesize($file));
-		fclose($fopen);
 
 		try {
 			$this->pdo->exec($content);

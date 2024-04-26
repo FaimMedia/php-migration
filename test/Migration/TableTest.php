@@ -43,27 +43,11 @@ class TableTest extends AbstractTestCase
 	}
 
 	/**
-	 * Table exists
-	 */
-	protected function tableExists(string $tableName): bool
-	{
-		$query = $this->pdo->query(<<<SQL
-			SELECT EXISTS (
-				SELECT FROM "information_schema"."tables"
-				WHERE "table_schema" = 'public'
-				AND "table_name" = '{$tableName}'
-			);
-		SQL);
-
-		return $query->fetchColumn(0);
-	}
-
-	/**
 	 * Check table
 	 */
 	public function checkTable(string $tableName): void
 	{
-		$exists = $this->tableExists($tableName);
+		$exists = parent::tableExists($tableName);
 
 		parent::assertTrue($exists);
 
@@ -133,14 +117,14 @@ class TableTest extends AbstractTestCase
 			'test',
 		);
 
-		parent::assertTrue($this->tableExists('test'));
+		parent::assertTrue(parent::tableExists('test'));
 
 		$this->migration->downgradeFile(
 			0001,
 			'test',
 		);
 
-		parent::assertFalse($this->tableExists('test'));
+		parent::assertFalse(parent::tableExists('test'));
 
 		$query = $this->pdo->query(<<<SQL
 			SELECT *

@@ -49,6 +49,22 @@ abstract class AbstractTestCase extends TestCase
 	}
 
 	/**
+	 * Table exists
+	 */
+	protected function tableExists(string $tableName): bool
+	{
+		$query = $this->pdo->query(<<<SQL
+			SELECT EXISTS (
+				SELECT FROM "information_schema"."tables"
+				WHERE "table_schema" = 'public'
+				AND "table_name" = '{$tableName}'
+			);
+		SQL);
+
+		return $query->fetchColumn(0);
+	}
+
+	/**
 	 * Teardown
 	 */
 	public function tearDown(): void
