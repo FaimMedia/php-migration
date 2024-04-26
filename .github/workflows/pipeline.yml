@@ -12,12 +12,23 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   test:
-    runs-on: 'ubuntu-latest'
+    runs-on: ubuntu-latest
     container:
-      image: 'php:8.2-alpine3.19'
+      image: php:8.2-alpine3.19
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
+    services:
+      postgres:
+        image: postgres:16-alpine3.19
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: |
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
     steps:
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
+      - name: Run tests
         run: ./bin/test
