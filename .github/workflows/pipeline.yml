@@ -21,7 +21,7 @@ jobs:
         image: postgres:16-alpine3.19
         env:
           POSTGRES_PASSWORD: postgres
-        options: |
+        options: >-
           --health-cmd pg_isready
           --health-interval 10s
           --health-timeout 5s
