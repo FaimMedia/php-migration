@@ -95,3 +95,4 @@ jobs:
         run: chmod +x /app/vendor/bin/phpunit
       - name: Run tests
         run: /app/vendor/bin/phpunit -c /app/test/phpunit.xml
+        

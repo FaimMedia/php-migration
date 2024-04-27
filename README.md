@@ -2,9 +2,9 @@
 
 Simple PHP migration library to use with any available PHP PDO driver.
 
-# Install & usage
+## Install & usage
 
-## Add composer
+### Add composer
 
 Install this library using composer:
 
@@ -12,7 +12,7 @@ Install this library using composer:
 composer require faimmedia/migration
 ```
 
-## Run migrations (using CLI)
+### Run migrations (using CLI)
 
 Use the `./vendor/bin/migrate` command to run the migrations.
 
@@ -28,7 +28,7 @@ To migrate to a specific version, you may also include the `--version` parameter
 ./vendor/bin/migrate --path=migration/path --dsn="pgsql:host=postgres;dbname=database" --username=postgres --version=0002
 ```
 
-## Run migrations (from PHP)
+### Run migrations (from PHP)
 
 ```php
 <?php
@@ -56,7 +56,7 @@ $migration = new Migration([
 $migration->run();
 ```
 
-# Development
+## Development
 
 Start up docker containers:
 
