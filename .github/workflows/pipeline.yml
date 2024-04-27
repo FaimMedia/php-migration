@@ -11,12 +11,16 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build the Docker image
+      run: docker build . --file ./docker/php/Dockerfile --tag test:test
+
   test:
     runs-on: ubuntu-latest
-    container:
-      build:
-        context: .
-        dockerfile: ./docker/php/Dockerfile
 
     services:
       postgres:
