@@ -53,12 +53,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     - name: Download vendor folder
       uses: actions/download-artifact@v4
       with:
         name: composer-vendor
-    - name: Output tag
-      run: echo ${{ needs.setup.outputs.tag }}
     - name: Build the Docker image
       run: docker buildx build --pull --push --no-cache --tag="ghcr.io/faimmedia/php-migration/test:${{ needs.setup.outputs.tag }}" --file ./docker/php/Dockerfile .
 
