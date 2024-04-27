@@ -34,18 +34,29 @@ jobs:
         - ./vendor:/app/vendor:z
         - ./composer.json:/app/composer.json:r
     steps:
+      - uses: actions/checkout@v4
       - name: Show folder structure
         run: ls -la
       - name: Run composer
         run: composer install --working-dir=/app --ignore-platform-reqs
+      - name: Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: composer-vendor
+          path: vendor
+          retention-days: 5
 
   build:
     needs: build-composer
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+    - name: Download vendor folder
+      uses: actions/download-artifact@v4
+      with:
+        name: composer-vendor
     - name: Build the Docker image
-      run: docker build . --file ./docker/php/Dockerfile --tag test:{{ needs.setup.outputs.tag }}
+      run: docker build . --file ./docker/php/Dockerfile --push --tag ghcr.io/faimmedia/php-migration/test:{{ needs.setup.outputs.tag }}
 
   test:
     needs: build
