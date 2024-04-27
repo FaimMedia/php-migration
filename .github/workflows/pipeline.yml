@@ -51,15 +51,15 @@ jobs:
       with:
         name: composer-vendor
     - name: Output tag
-      run: echo {{ needs.setup.outputs.tag }}
+      run: echo ${{ needs.setup.outputs.tag }}
     - name: Build the Docker image
-      run: docker buildx build --pull --push --no-cache --tag="ghcr.io/faimmedia/php-migration/test:{{ needs.setup.outputs.tag }}"" --file ./docker/php/Dockerfile .
+      run: docker buildx build --pull --push --no-cache --tag="ghcr.io/faimmedia/php-migration/test:${{ needs.setup.outputs.tag }}" --file ./docker/php/Dockerfile .
 
   test:
     needs: build
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/faimmedia/php-migration/test:{{ needs.setup.outputs.tag }}
+      image: ghcr.io/faimmedia/php-migration/test:${{ needs.setup.outputs.tag }}
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.github_token }}
