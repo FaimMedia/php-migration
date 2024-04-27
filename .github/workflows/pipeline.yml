@@ -91,4 +91,4 @@ jobs:
           - 5432:5432
     steps:
       - name: Run tests
-        run: /app/bin/test
+        run: /app/vendor/bin/phpunit -c /app/test/phpunit.xml
