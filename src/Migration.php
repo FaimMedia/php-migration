@@ -38,8 +38,8 @@ class Migration
 	{
 		$this->pdo = new PDO(
 			$options['dsn'],
-			$option['username'] ?? null,
-			$option['password'] ?? null,
+			$options['username'] ?? null,
+			$options['password'] ?? null,
 			[
 				PDO::ATTR_ERRMODE    => PDO::ERRMODE_EXCEPTION,
 				PDO::ATTR_AUTOCOMMIT => 0,
