@@ -1,0 +1,4 @@
+CREATE TABLE IF NOT EXISTS "new_table" (
+	"pk" VARCHAR(255) NOT NULL PRIMARY KEY,
+	"description" VARCHAR(255) NOT NULL
+);
