@@ -1,8 +1,6 @@
 services:
   postgres:
-    build:
-      context: .
-      dockerfile: ./docker/postgres/Dockerfile
+    image: postgres:16-alpine3.19
     environment:
       POSTGRES_USER: migrate-test
       POSTGRES_HOST_AUTH_METHOD: trust
