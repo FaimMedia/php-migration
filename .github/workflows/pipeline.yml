@@ -91,11 +91,7 @@ jobs:
         ports:
           - 5432:5432
     steps:
-      - name: Current folder
-        run: ls -la .
-      - name: Output folder
-        run: ls -la .
-      - name: App folder
-        run: ls -la /app
+      - name: Set executable
+        run: chmod +x /app/vendor/bin/phpunit
       - name: Run tests
         run: /app/vendor/bin/phpunit -c /app/test/phpunit.xml
