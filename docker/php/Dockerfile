@@ -7,4 +7,6 @@ RUN apk add --no-cache postgresql-dev \
 
 WORKDIR /app
 
+COPY . /app
+
 ENTRYPOINT ["tail", "-f", "/dev/null"]
