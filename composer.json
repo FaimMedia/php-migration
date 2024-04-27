@@ -11,12 +11,13 @@
 	}],
 
 	"require": {
-		"php": "8.*",
-
-		"ext-pdo" : "*"
+		"php": "^8.2",
+		"ext-pdo": "*"
 	},
 
 	"require-dev": {
+		"ext-pdo_pgsql": "*",
+		"ext-pgsql": "*",
 		"phpunit/phpunit": "10.3"
 	},
 
