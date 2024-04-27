@@ -51,7 +51,7 @@ jobs:
       with:
         name: composer-vendor
     - name: Build the Docker image
-      run: docker build . --file ./docker/php/Dockerfile --push --tag ghcr.io/faimmedia/php-migration/test:{{ needs.setup.outputs.tag }}
+      run: docker buildx build --pull --push --no-cache --tag="ghcr.io/faimmedia/php-migration/test:{{ needs.setup.outputs.tag }}"" --file ./docker/php/Dockerfile .
 
   test:
     needs: build
