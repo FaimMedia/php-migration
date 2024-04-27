@@ -2,6 +2,7 @@
 
 namespace FaimMedia\Migration\Test;
 
+use FaimMedia\Migration\Logger\Noop;
 use FaimMedia\Migration\Migration;
 
 use PHPUnit\Framework\TestCase;
@@ -25,7 +26,7 @@ abstract class AbstractTestCase extends TestCase
 		$this->migration = new Migration([
 			'dsn'  => 'pgsql:host=postgres;port=5432;dbname=' . PDO_DATABASE . ';user=' . PDO_USERNAME,
 			'path' => TEST_PATH . 'sql/',
-		]);
+		], new Noop());
 
 		$reflection = new ReflectionClass($this->migration);
 		$property = $reflection->getProperty('pdo');
