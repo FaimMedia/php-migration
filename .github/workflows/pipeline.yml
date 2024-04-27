@@ -80,7 +80,8 @@ jobs:
       postgres:
         image: postgres:16-alpine3.19
         env:
-          POSTGRES_PASSWORD: postgres
+          POSTGRES_HOST_AUTH_METHOD: trust
+          POSTGRES_USER: migrate-test
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
