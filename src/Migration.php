@@ -4,6 +4,12 @@ declare(strict_types = 1);
 
 namespace FaimMedia\Migration;
 
+use FaimMedia\Migration\Logger\{
+    ColorEnum,
+    LoggerInterface,
+	Color,
+};
+
 use PDO;
 use PDOStatement;
 
@@ -106,11 +112,24 @@ class Migration
 	 */
 	public function run(): void
 	{
+		$this->logger->output('Starting migration', false, ColorEnum::CYAN);
+
 		$structure = $this->getStructure();
 
 		foreach ($structure as $version => $names) {
+			$this->logger->output('Applying version ' . $version, false, ColorEnum::MAGENTA);
+
 			foreach ($names as $name) {
-				$this->importFile((int) $version, $name);
+				try {
+					$this->importFile((int) $version, $name);
+				} catch (Exception $e) {
+					if ($e->getCode() === Exception::MIGRATION_ALREADY_APPLIED) {
+						$this->logger->output('ALREADY APPLIED', true, ColorEnum::YELLOW);
+						continue;
+					}
+
+					throw $e;
+				}
 			}
 		}
 	}
@@ -172,6 +191,8 @@ class Migration
 			);
 		}
 
+		$this->logger->output(' - ' . ($downgrade ? 'Downgrading' : 'Migrating') . ' file ' . $fileName . '…');
+
 		/**
 		 * Check if migration exists
 		 */
@@ -206,8 +227,6 @@ class Migration
 			);
 		}
 
-		$this->output(($downgrade ? 'Downgrading' : 'Migrating') . ' file ' . $fileName . '…');
-
 		$fopen = fopen($file, 'r');
 		$content = trim(fread($fopen, max(filesize($file), 0, 1)));
 		fclose($fopen);
@@ -231,8 +250,8 @@ class Migration
 		try {
 			$this->pdo->exec($content);
 		} catch (PDOException $e) {
-			$this->output('ERROR', true, 'red');
-			$this->output(' - PDO Error: ' . $e->getMessage());
+			$this->logger->output('ERROR', true, ColorEnum::RED);
+			$this->logger->output(' - PDO Error: ' . $e->getMessage());
 
 			if ($useTransaction) {
 				$this->pdo->rollBack();
@@ -275,7 +294,7 @@ class Migration
 			$this->pdo->commit();
 		}
 
-		$this->output($downgrade ? 'DOWNGRADED' : 'MIGRATED', true, 'green');
+		$this->logger->output($downgrade ? 'DOWNGRADED' : 'MIGRATED', true, ColorEnum::GREEN);
 
 		return true;
 	}
@@ -286,29 +305,5 @@ class Migration
 	public function downgradeFile(int $version, string $fileName): bool
 	{
 		return $this->importFile($version, $fileName, true);
-	}
-
-	/**
-	 * Output info
-	 */
-	protected function output(
-		string $message,
-		bool $previousLine = false,
-		string $color = null,
-	): void
-	{
-		if ($previousLine) {
-			echo chr(27) . "[u";
-			echo chr(27) . "[A";
-			echo " ";
-		}
-
-		echo $message;
-
-		if (!$previousLine) {
-			echo chr(27) . "[s";
-		}
-
-		echo "\n";
 	}
 }
