@@ -30,9 +30,9 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: composer:2.7.2
-    volumes:
-      - ./vendor:/app/vendor:z
-      - ./composer.json:/app/composer.json:r
+      volumes:
+        - ./vendor:/app/vendor:z
+        - ./composer.json:/app/composer.json:r
     steps:
       - name: Run composer
         run: composer install --working-dir=/app --ignore-platform-reqs
