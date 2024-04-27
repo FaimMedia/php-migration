@@ -24,6 +24,7 @@ $options = getopt('', [
 	'password::',
 	'path:',
 	'version::',
+	'tableName::',
 ]);
 
 $errors = [];
