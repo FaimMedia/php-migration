@@ -1,6 +1,9 @@
 <?php
 
-use App\Engine\Di;
+use FaimMedia\Migration\Logger\{
+	Color,
+	ColorEnum,
+};
 
 define('ROOT_PATH', realpath(__DIR__ . '/..') . '/');
 define('SOURCE_PATH', ROOT_PATH . 'src/');
@@ -11,7 +14,8 @@ define('PDO_DATABASE', 'migrate-test');
 
 require ROOT_PATH . 'vendor/autoload.php';
 
-echo 'Initialize…' . PHP_EOL;
+$logger = new Color();
+$logger->output('Initializing database…', false, ColorEnum::MAGENTA);
 
 $pdo = new PDO(
 	'pgsql:host=postgres;port=5432;dbname=' . PDO_DATABASE . ';user=' . PDO_USERNAME,
