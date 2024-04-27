@@ -1,3 +1,9 @@
 /.github
 /docker
 Dockerfile
+/composer.json
+/composer.lock
+/.gitignore
+/README.md
+/docker-compose.yml
+/docker-compose.override.yml
