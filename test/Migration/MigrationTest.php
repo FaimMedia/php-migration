@@ -33,7 +33,5 @@ class MigrationTest extends AbstractTestCase
 		parent::assertTrue(parent::tableExists('test_2'));
 		parent::assertTrue(parent::tableExists('test_3'));
 		parent::assertTrue(parent::tableExists('test_4'));
-
 	}
-
 }
