@@ -9,6 +9,7 @@ services:
       context: .
       dockerfile: ./docker/php/Dockerfile
     volumes:
+      - ./bin:/app/bin
       - ./src:/app/src
       - ./test:/app/test
       - ./vendor:/app/vendor
