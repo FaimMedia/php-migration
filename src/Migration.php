@@ -31,7 +31,10 @@ class Migration
 	/**
 	 * Constructor
 	 */
-	public function __construct(array $options)
+	public function __construct(
+		array $options,
+		protected LoggerInterface $logger = new Color(),
+	)
 	{
 		$this->pdo = new PDO(
 			$options['dsn'],
