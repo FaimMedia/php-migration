@@ -1,6 +1,7 @@
 {
 	"name": "faimmedia/migration",
 	"type": "library",
+	"license": "MIT",
 	"description": "FaimMedia Simple PHP Database Migration",
 	"version": "0.1",
 	"homepage": "https://faimmedia.nl",
