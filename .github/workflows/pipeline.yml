@@ -30,15 +30,12 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: composer:2.7.2
-      volumes:
-        - ./vendor:/app/vendor:z
-        - ./composer.json:/app/composer.json:r
     steps:
       - uses: actions/checkout@v4
       - name: Show folder structure
         run: ls -la
       - name: Run composer
-        run: composer install --working-dir=/app --ignore-platform-reqs
+        run: composer install --ignore-platform-reqs
       - name: Artifacts
         uses: actions/upload-artifact@v4
         with:
