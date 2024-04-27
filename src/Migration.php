@@ -11,7 +11,6 @@ use FaimMedia\Migration\Logger\{
 };
 
 use PDO;
-use PDOStatement;
 
 use PDOException;
 use FaimMedia\Migration\Exception;
