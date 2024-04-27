@@ -168,6 +168,13 @@ class Migration
 			$structure[$versionNumber][] = $baseName;
 		}
 
+		if (!$structure) {
+			throw new Exception(
+				'No migration files present in `' . $this->path . '`',
+				Exception::FOLDER_EMPTY,
+			);
+		}
+
 		$this->structure = $structure;
 
 		return $this->structure;

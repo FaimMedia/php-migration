@@ -32,6 +32,11 @@ class Exception extends BaseException
 	public const EMPTY_FILE = -4;
 
 	/**
+	 * The migration folder does not contain any sql files
+	 */
+	public const FOLDER_EMPTY = -5;
+
+	/**
 	 * Trying to rollback a migration that isn't applied
 	 */
 	public const MIGRATION_NOT_APPLIED = -11;
