@@ -118,12 +118,14 @@ class Migration
 
 		$structure = $this->getStructure();
 
+		$applied = 0;
 		foreach ($structure as $version => $names) {
 			$this->logger->output('Applying version ' . $version, false, ColorEnum::MAGENTA);
 
 			foreach ($names as $name) {
 				try {
 					$this->importFile((int) $version, $name);
+					$applied++;
 				} catch (Exception $e) {
 					if ($e->getCode() === Exception::MIGRATION_ALREADY_APPLIED) {
 						$this->logger->output('ALREADY APPLIED', true, ColorEnum::YELLOW);
@@ -133,6 +135,12 @@ class Migration
 					throw $e;
 				}
 			}
+		}
+
+		if (!$applied) {
+			$this->logger->output('Everything is up-to-date', false, ColorEnum::GREEN);
+		} else {
+			$this->logger->output('Applied ' . $applied . ' file(s)', false, ColorEnum::GREEN);
 		}
 	}
 
