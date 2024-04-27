@@ -9,20 +9,23 @@ on:
       - "development"
   pull_request:
 
+env:
+  BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   setup:
     runs-on: ubuntu-latest
     steps:
       - name: Output branch
-        run: echo $BRANCH
+        run: echo $BRANCH_NAME
       - name: Setting environment
         id: tag
         run: |
-          if [[ $BRANCH == 'master' ]]; then
+          if [[ $BRANCH_NAME == 'master' ]]; then
             echo "TAG=latest" >> $GITHUB_OUTPUT
           else
-            echo "TAG=$BRANCH" >> $GITHUB_OUTPUT
+            echo "TAG=$BRANCH_NAME" >> $GITHUB_OUTPUT
           fi
     outputs:
       tag: ${{ steps.tag.outputs.TAG }}
