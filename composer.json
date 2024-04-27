@@ -21,6 +21,10 @@
 		"phpunit/phpunit": "10.3"
 	},
 
+	"bin": [
+        "bin/migrate"
+    ],
+
 	"autoload": {
 		"psr-4": {
 			"FaimMedia\\Migration\\": "src/",
