@@ -14,6 +14,8 @@ jobs:
   setup:
     runs-on: ubuntu-latest
     steps:
+      - name: Output branch
+        run: echo $BRANCH
       - name: Setting environment
         id: tag
         run: |
@@ -42,7 +44,9 @@ jobs:
           retention-days: 5
 
   build:
-    needs: build-composer
+    needs:
+      - setup
+      - build-composer
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -56,7 +60,9 @@ jobs:
       run: docker buildx build --pull --push --no-cache --tag="ghcr.io/faimmedia/php-migration/test:${{ needs.setup.outputs.tag }}" --file ./docker/php/Dockerfile .
 
   test:
-    needs: build
+    needs:
+      - setup
+      - build
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/faimmedia/php-migration/test:${{ needs.setup.outputs.tag }}
