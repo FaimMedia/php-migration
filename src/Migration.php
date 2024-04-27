@@ -58,7 +58,7 @@ class Migration
 			);
 		}
 
-		$this->path = trim($path, '/') . '/';
+		$this->path = rtrim($path, '/') . '/';
 
 		if (isset($options['tableName'])) {
 			$this->tableName = $options['tableName'];
