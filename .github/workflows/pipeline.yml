@@ -63,6 +63,7 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: composer-vendor
+        path: vendor/
     - name: Build the Docker image
       run: docker buildx build --pull --push --no-cache --tag="ghcr.io/faimmedia/php-migration/test:${{ needs.setup.outputs.tag }}" --file ./docker/php/Dockerfile .
 
