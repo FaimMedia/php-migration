@@ -32,8 +32,6 @@ jobs:
       image: composer:2.7.2
     steps:
       - uses: actions/checkout@v4
-      - name: Show folder structure
-        run: ls -la
       - name: Run composer
         run: composer install --ignore-platform-reqs
       - name: Artifacts
