@@ -54,7 +54,8 @@ class TableTest extends AbstractTestCase
 		$query = $this->pdo->query(<<<SQL
 			SELECT "column_name", "udt_name", "character_maximum_length", "column_default", "is_nullable"
 			FROM "information_schema"."columns"
-			WHERE "table_name" = '{$tableName}';
+			WHERE "table_name" = '{$tableName}'
+			ORDER BY "ordinal_position" ASC;
 		SQL);
 
 		$result = $query->fetchAll(PDO::FETCH_ASSOC);
