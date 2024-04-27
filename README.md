@@ -19,13 +19,20 @@ Use the `./vendor/bin/migrate` command to run the migrations.
 Example:
 
 ```bash
-./vendor/bin/migrate --path=migration/path --dsn="pgsql:host=postgres;dbname=database" --username=postgres
+./vendor/bin/migrate \
+	--path=migration/path \
+	--dsn="pgsql:host=postgres;dbname=database" \
+	--username=postgres
 ```
 
 To migrate to a specific version, you may also include the `--version` parameter. This will apply or undo only specific versions.
 
 ```bash
-./vendor/bin/migrate --path=migration/path --dsn="pgsql:host=postgres;dbname=database" --username=postgres --version=0002
+./vendor/bin/migrate \
+	--path=migration/path \
+	--dsn="pgsql:host=postgres;dbname=database" \
+	--username=postgres \
+	--version=0002
 ```
 
 ### Run migrations (from PHP)
