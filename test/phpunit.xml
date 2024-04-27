@@ -26,4 +26,11 @@
     		<directory suffix=".php">test</directory>
 		</include>
 	</source>
+	<coverage pathCoverage="true" cacheDirectory="cache/phpunit">
+		<report>
+			<html outputDirectory="cache/phpunit/coverage" />
+			<text outputFile="cache/phpunit/coverage.txt" />
+			<php outputFile="cache/phpunit/coverage.php" />
+		</report>
+	</coverage>
 </phpunit>
