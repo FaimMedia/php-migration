@@ -11,17 +11,48 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  build:
+  setup:
     runs-on: ubuntu-latest
+    steps:
+      - name: Setting environment
+        id: tag
+        run: |
+          if [[ $BRANCH == 'master' ]]; then
+            echo "TAG=latest" >> $GITHUB_OUTPUT
+          else
+            echo "TAG=$BRANCH" >> $GITHUB_OUTPUT
+          fi
+    outputs:
+      tag: ${{ steps.tag.outputs.TAG }}
 
+  build:composer:
+    needs: setup
+    runs-on: ubuntu-latest
+    container:
+      image: composer:2.7.2
+    volumes:
+      - ./vendor:/app/vendor:z
+      - ./composer.json:/app/composer.json:r
+    steps:
+      - name: Run composer
+        run: composer install --working-dir=/app --ignore-platform-reqs
+
+  build:
+    needs: build:composer
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
     - name: Build the Docker image
-      run: docker build . --file ./docker/php/Dockerfile --tag test:test
+      run: docker build . --file ./docker/php/Dockerfile --tag test:{{ needs.setup.outputs.tag }}
 
   test:
+    needs: build
     runs-on: ubuntu-latest
-
+    container:
+      image: ghcr.io/faimmedia/php-migration/test:{{ needs.setup.outputs.tag }}
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.github_token }}
     services:
       postgres:
         image: postgres:16-alpine3.19
@@ -34,7 +65,6 @@ jobs:
           --health-retries 5
         ports:
           - 5432:5432
-
     steps:
       - name: Run tests
-        run: ./bin/test
+        run: /app/bin/test
