@@ -95,15 +95,7 @@ class TableTest extends AbstractTestCase
 			'test',
 		);
 
-		$query = $this->pdo->query(<<<SQL
-			SELECT *
-			FROM "migration"
-			WHERE "version" = '0001'
-			AND "name" = 'test'
-			AND "applied" >= '{$startTime}'
-		SQL);
-
-		$resultset = $query->fetch(PDO::FETCH_NUM);
+		$resultset = $this->migrationExists('0001', 'test', $startTime);
 
 		parent::assertNotFalse($resultset);
 	}
@@ -127,14 +119,7 @@ class TableTest extends AbstractTestCase
 
 		parent::assertFalse(parent::tableExists('test'));
 
-		$query = $this->pdo->query(<<<SQL
-			SELECT *
-			FROM "migration"
-			WHERE "version" = '0001'
-			AND "name" = 'test'
-		SQL);
-
-		$resultset = $query->fetch(PDO::FETCH_NUM);
+		$resultset = $this->migrationExists('0001', 'test');
 
 		parent::assertFalse($resultset);
 	}

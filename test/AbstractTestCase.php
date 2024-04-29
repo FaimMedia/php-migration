@@ -66,6 +66,33 @@ abstract class AbstractTestCase extends TestCase
 	}
 
 	/**
+	 * Migration exists
+	 */
+	protected function migrationExists(
+		string $versionNumber,
+		string $name,
+		string $startTime = null,
+	): array | false
+	{
+		$query = <<<SQL
+			SELECT *
+			FROM "migration"
+			WHERE "version" = '{$versionNumber}'
+			AND "name" = '{$name}'
+		SQL;
+
+		if ($startTime) {
+			$query .= <<<SQL
+				AND "applied" >= '{$startTime}'
+			SQL;
+		}
+
+		$query = $this->pdo->query($query);
+
+		return $query->fetch(PDO::FETCH_NUM);
+	}
+
+	/**
 	 * Teardown
 	 */
 	public function tearDown(): void
