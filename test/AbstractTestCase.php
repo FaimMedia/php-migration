@@ -93,6 +93,27 @@ abstract class AbstractTestCase extends TestCase
 	}
 
 	/**
+	 * Migration count
+	 */
+	protected function migrationCount(string $startTime = null): int
+	{
+		$query = <<<SQL
+			SELECT COUNT(1) c
+			FROM "migration"
+		SQL;
+
+		if ($startTime) {
+			$query .= <<<SQL
+				WHERE "applied" >= '{$startTime}'
+			SQL;
+		}
+
+		$query = $this->pdo->query($query);
+
+		return (int) $query->fetch(PDO::FETCH_COLUMN, 0);
+	}
+
+	/**
 	 * Teardown
 	 */
 	public function tearDown(): void
