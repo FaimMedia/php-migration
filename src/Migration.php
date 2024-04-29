@@ -50,15 +50,7 @@ class Migration
 			throw new Exception('Path option is missing', Exception::PATH);
 		}
 
-		$path = $options['path'];
-		if (!file_exists($path) || !is_dir($path)) {
-			throw new Exception(
-				'The path `' . $path . '` does not exist or is not a directory',
-				Exception::PATH,
-			);
-		}
-
-		$this->path = rtrim($path, '/') . '/';
+		$this->setPath($options['path']);
 
 		if (isset($options['tableName'])) {
 			$this->tableName = $options['tableName'];
@@ -78,6 +70,21 @@ class Migration
 	public function setTableName(string $tableName = self::DEFAULT_TABLE_NAME): void
 	{
 		$this->tableName = $tableName;
+	}
+
+	/**
+	 * Set path
+	 */
+	public function setPath(string $path): void
+	{
+		if (!file_exists($path) || !is_dir($path)) {
+			throw new Exception(
+				'The path `' . $path . '` does not exist or is not a directory',
+				Exception::PATH,
+			);
+		}
+
+		$this->path = rtrim($path, '/') . '/';
 	}
 
 	/**
