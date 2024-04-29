@@ -119,11 +119,22 @@ class Migration
 	/**
 	 * Run migrations
 	 */
-	public function run(): void
+	public function run(string $versionNumber = null): void
 	{
+		if ($versionNumber) {
+			$this->validateVersion($versionNumber);
+		}
+
 		$this->logger->output('Starting migration', false, ColorEnum::CYAN);
 
 		$structure = $this->getStructure();
+
+		$maxVersion = max(array_keys($structure));
+		if ($versionNumber !== null) {
+			$this->logger->output('Migration to version number' . $versionNumber, false, ColorEnum::CYAN);
+
+			// downgrade WIP
+		}
 
 		$applied = 0;
 		foreach ($structure as $version => $names) {
