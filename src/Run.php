@@ -47,7 +47,7 @@ try {
 		...$options,
 	]);
 
-	$migration->run();
+	$migration->run($options['version'] ?? null);
 } catch (Throwable $e) {
 	echo 'An error occurred during migration: ' . $e->getMessage() . PHP_EOL;
 	print_r($e->getTrace());
