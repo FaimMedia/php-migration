@@ -37,6 +37,11 @@ class Exception extends BaseException
 	public const FOLDER_EMPTY = -5;
 
 	/**
+	 * Invalid version number provided
+	 */
+	public const VERSION_NUMBER = -6;
+
+	/**
 	 * Trying to rollback a migration that isn't applied
 	 */
 	public const MIGRATION_NOT_APPLIED = -11;
