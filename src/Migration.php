@@ -152,6 +152,38 @@ class Migration
 	}
 
 	/**
+	 * Check version number
+	 *
+	 * @throws Exception
+	 */
+	public function validateVersion(string $versionNumber): bool
+	{
+		if (!ctype_digit($versionNumber) || strlen($versionNumber) !== 4) {
+			throw new Exception(
+				'Version number should be a string of 4 digits, example: 0001',
+				Exception::VERSION_NUMBER,
+			);
+		}
+
+		$path = $this->path . '/' . $versionNumber;
+		if (!file_exists($path) || !is_dir($path)) {
+			throw new Exception(
+				'Version number ' . $versionNumber . ' does not exists, or is not a folder',
+				Exception::FOLDER_STRUCTURE,
+			);
+		}
+
+		if (!glob($path . '/*.sql')) {
+			throw new Exception(
+				'The folder for version number ' . $versionNumber . ' is empty and cannot be applied',
+				Exception::FOLDER_EMPTY,
+			);
+		}
+
+		return true;
+	}
+
+	/**
 	 * Get folders and file structure
 	 */
 	public function getStructure(): array
@@ -169,11 +201,17 @@ class Migration
 			$versionNumber = dirname($relative);
 			$baseName = basename($relative, '.sql');
 
-			if (!ctype_digit($versionNumber) || strlen($versionNumber) !== 4) {
-				throw new Exception(
-					'Folder structure for version should be 4 digits, example: 0001',
-					Exception::FOLDER_STRUCTURE,
-				);
+			try {
+				$this->validateVersion($versionNumber);
+			} catch (Exception $e) {
+				if ($e->getCode() === Exception::VERSION_NUMBER) {
+					throw new Exception(
+						'Folder structure for version should be 4 digits, example: 0001',
+						Exception::FOLDER_STRUCTURE,
+					);
+				}
+
+				throw $e;
 			}
 
 			if (substr($baseName, -5) === '-down') {
