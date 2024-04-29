@@ -185,6 +185,8 @@ class Migration
 
 	/**
 	 * Get folders and file structure
+	 *
+	 * @throws Exception
 	 */
 	public function getStructure(): array
 	{
@@ -235,6 +237,8 @@ class Migration
 
 	/**
 	 * Import file
+	 *
+	 * @throws Exception
 	 */
 	public function importFile(
 		int $version,
