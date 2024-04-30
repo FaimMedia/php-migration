@@ -26,6 +26,7 @@ $options = getopt('', [
 	'version::',
 	'tableName::',
 	'debug',
+	'sleep::',
 ]);
 
 $errors = [];

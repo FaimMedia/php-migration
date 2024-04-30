@@ -27,6 +27,7 @@ class Migration
 	protected string $tableName = self::DEFAULT_TABLE_NAME;
 	protected string $path;
 	protected array $structure;
+	protected int $sleep = 0;
 
 	/**
 	 * Constructor
@@ -269,6 +270,8 @@ class Migration
 		}
 
 		$this->logger->output(' - ' . ($downgrade ? 'Downgrading' : 'Migrating') . ' file ' . $fileName . '…');
+
+		usleep($this->sleep);
 
 		/**
 		 * Check if migration exists
