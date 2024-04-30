@@ -50,17 +50,19 @@ $migration = new Migration([
 	'dsn'      => '',
 	'username' => 'username',
 	'password' => 'my-super-secret-password',
-
-	/**
-	 * Include optional version, if omitted all versions will be migrated
-	 */
-	'version'  => '0003',
 ], new Color());
 
 /**
- * Run migrations
+ * Run all migrations
  */
 $migration->run();
+```
+
+Or you can run a specific set of migrations:  
+Mmigrations that are already applied will be rolled back if there are `-down` file present for the specific version and name.
+
+```php
+$migration->run('0003');
 ```
 
 ## Development
