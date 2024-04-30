@@ -31,6 +31,71 @@ class MigrationTest extends AbstractTestCase
 	}
 
 	/**
+	 * Test migration version 0 that should always run
+	 */
+	public function testAlwaysRunMigration(): void
+	{
+		$this->migration->run('0001');
+
+		parent::assertTrue(parent::tableExists('always_run'));
+	}
+
+	/**
+	 * Test migration version 0 when table is removed
+	 */
+	public function testAlwaysRunMigrationWhenTableRemoval(): void
+	{
+		$this->testAlwaysRunMigration();
+
+		$this->pdo->query('DROP TABLE "always_run"');
+
+		parent::assertFalse(parent::tableExists('always_run'));
+
+		$this->migration->run("0001");
+
+		parent::assertTrue(parent::tableExists('always_run'));
+	}
+
+	/**
+	 * Test migration version 0 when value is changed
+	 */
+	public function testAlwaysRunMigrationWhenValueIsChanged(): void
+	{
+		$defaultValue = 'Test value 2';
+
+		$this->testAlwaysRunMigration();
+
+		parent::assertSame($defaultValue, $this->getValueFromAlwaysRun());
+
+		$randomValue = 'New random string: ' . md5(uniqid(time()));
+
+		$prepare = $this->pdo->prepare('UPDATE "always_run" SET "col2" = ? WHERE "col1" = ?');
+		$prepare->execute([
+			$randomValue,
+			'key2',
+		]);
+
+		parent::assertSame($randomValue, $this->getValueFromAlwaysRun());
+
+		$this->testAlwaysRunMigration();
+
+		parent::assertSame($defaultValue, $this->getValueFromAlwaysRun());
+	}
+
+	/**
+	 * Get value from always run key2 table
+	 */
+	protected function getValueFromAlwaysRun(): ?string
+	{
+		$prepare = $this->pdo->prepare('SELECT "col2" FROM "always_run" WHERE "col1" = ?');
+		$prepare->execute([
+			'key2',
+		]);
+
+		return $prepare->fetchColumn(0);
+	}
+
+	/**
 	 * Full migration test
 	 */
 	public function testFullMigration(): void
