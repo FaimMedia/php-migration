@@ -24,8 +24,9 @@ abstract class AbstractTestCase extends TestCase
 	public function setUp(): void
 	{
 		$this->migration = new Migration([
-			'dsn'  => 'pgsql:host=postgres;port=5432;dbname=' . PDO_DATABASE . ';user=' . PDO_USERNAME,
-			'path' => TEST_PATH . 'sql/',
+			'dsn'            => 'pgsql:host=postgres;port=5432;dbname=' . PDO_DATABASE . ';user=' . PDO_USERNAME,
+			'path'           => TEST_PATH . 'sql/',
+			'useTransaction' => false,
 		], new Noop());
 
 		$reflection = new ReflectionClass($this->migration);

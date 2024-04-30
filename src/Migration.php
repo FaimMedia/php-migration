@@ -28,6 +28,7 @@ class Migration
 	protected string $path;
 	protected array $structure;
 	protected int $sleep = 0;
+	protected bool $useTransaction = true;
 
 	/**
 	 * Constructor
@@ -56,6 +57,8 @@ class Migration
 		if (isset($options['tableName'])) {
 			$this->tableName = $options['tableName'];
 		}
+
+		$this->useTransaction = $options['useTransaction'] ?? true;
 
 		if (!$this->getStatus()) {
 			throw new Exception('Connection failed');
