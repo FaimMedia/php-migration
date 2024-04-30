@@ -258,7 +258,7 @@ class Migration
 		bool $downgrade = false,
 	): bool
 	{
-		$versionNumber = str_pad((string) $version, 4, '0', STR_PAD_LEFT);
+		$versionNumber = $this->versionPad($version);
 		$file = $this->path . $versionNumber . '/'
 			. $fileName . ($downgrade ? '-down' : '') . '.sql';
 
@@ -385,5 +385,13 @@ class Migration
 	public function downgradeFile(int $version, string $fileName): bool
 	{
 		return $this->importFile($version, $fileName, true);
+	}
+
+	/**
+	 * Version pad
+	 */
+	public function versionPad(int | string $version): string
+	{
+		return str_pad((string) $version, 4, '0', STR_PAD_LEFT);
 	}
 }
