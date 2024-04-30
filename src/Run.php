@@ -25,6 +25,7 @@ $options = getopt('', [
 	'path:',
 	'version::',
 	'tableName::',
+	'debug',
 ]);
 
 $errors = [];
@@ -49,8 +50,30 @@ try {
 
 	$migration->run($options['version'] ?? null);
 } catch (Throwable $e) {
-	echo 'An error occurred during migration: ' . $e->getMessage() . PHP_EOL;
-	print_r($e->getTrace());
+	$message = 'An error occurred during migration: ' . $e->getMessage();
+
+	$wraps = explode("\n", wordwrap($message, 75));
+	$maxLength = max(array_map('strlen', $wraps)) + 4;
+
+	echo chr(27) . '[41m' . str_repeat(' ', $maxLength) . chr(27) . '[0m' . PHP_EOL;
+
+	foreach ($wraps as $wrap) {
+		echo chr(27) . '[41m' . '  ' . str_pad($wrap, $maxLength - 2, ' ') . chr(27) . '[0m' . PHP_EOL;
+	}
+
+	echo chr(27) . '[41m' . str_repeat(' ', $maxLength) . chr(27) . '[0m' . PHP_EOL;
+
+	if (($options['debug'] ?? null) !== null) {
+		echo 'Stack trace: ' . PHP_EOL;
+
+		$trace = $e->getTrace();
+		array_unshift($trace, [
+			'file' => $e->getFile(),
+			'line' => $e->getLine(),
+		]);
+
+		echo json_encode($trace, JSON_PRETTY_PRINT);
+	}
 
 	exit(2);
 }
