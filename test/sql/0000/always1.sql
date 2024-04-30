@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS "always_run" (
+	"col1" VARCHAR(255) NOT NULL,
+	"col2" VARCHAR(255) NOT NULL,
+	PRIMARY KEY ("col1")
+);

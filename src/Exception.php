@@ -42,6 +42,11 @@ class Exception extends BaseException
 	public const VERSION_NUMBER = -6;
 
 	/**
+	 * Version number 0000 provided is not valid for downgrade
+	 */
+	public const DOWNGRADE_VERSION_NUMBER = -7;
+
+	/**
 	 * Trying to rollback a migration that isn't applied
 	 */
 	public const MIGRATION_NOT_APPLIED = -11;

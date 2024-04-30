@@ -227,6 +227,13 @@ class Migration
 			);
 		}
 
+		if (((int) $versionNumber) === 0) {
+			throw new Exception(
+				'Version number cannot be 0000',
+				Exception::VERSION_NUMBER,
+			);
+		}
+
 		$path = $this->path . '/' . $versionNumber;
 		if (!file_exists($path) || !is_dir($path)) {
 			throw new Exception(
@@ -264,6 +271,14 @@ class Migration
 
 			$versionNumber = dirname($relative);
 			$baseName = basename($relative, '.sql');
+
+			/**
+			 * Always run 0000 version, so skip valid version number check
+			 */
+			if ($versionNumber === '0000') {
+				$structure[$versionNumber][] = $baseName;
+				continue;
+			}
 
 			try {
 				$this->validateVersion($versionNumber);
@@ -311,6 +326,13 @@ class Migration
 		$versionNumber = $this->versionPad($version);
 		$file = $this->path . $versionNumber . '/'
 			. $fileName . ($downgrade ? '-down' : '') . '.sql';
+
+		if ($versionNumber === '0000' && $downgrade) {
+			throw new Exception(
+				'Version 0000 cannot be used with downgrades',
+				Exception::DOWNGRADE_VERSION_NUMBER,
+			);
+		}
 
 		if (!file_exists($file)) {
 			throw new Exception(
@@ -385,7 +407,7 @@ class Migration
 		/**
 		 * Insert version and file
 		 */
-		if (!$downgrade) {
+		if (!$downgrade && $versionNumber !== '0000') {
 			$prepare = $this->pdo->prepare(<<<SQL
 				INSERT INTO "{$this->tableName}"
 				VALUES (?, ?, ?)

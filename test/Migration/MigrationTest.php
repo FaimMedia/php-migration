@@ -4,6 +4,8 @@ namespace FaimMedia\Migration\Test\Migration;
 
 use FaimMedia\Migration\Test\AbstractTestCase;
 
+use FaimMedia\Migration\Exception;
+
 /**
  * Full migration test
  */
@@ -15,6 +17,17 @@ class MigrationTest extends AbstractTestCase
 	public function setUp(): void
 	{
 		parent::setUp();
+	}
+
+	/**
+	 * Test migration version 0
+	 */
+	public function testVersion0Migration(): void
+	{
+		parent::expectException(Exception::class);
+		parent::expectExceptionCode(Exception::VERSION_NUMBER);
+
+		$this->migration->run('0000');
 	}
 
 	/**
