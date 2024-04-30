@@ -4,8 +4,6 @@ namespace FaimMedia\Migration\Test\Migration;
 
 use FaimMedia\Migration\Test\AbstractTestCase;
 
-use FaimMedia\Migration\Exception;
-
 /**
  * Full migration test
  */
