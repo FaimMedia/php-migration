@@ -128,17 +128,40 @@ class Migration
 
 		$this->logger->output('Starting migration', false, ColorEnum::CYAN);
 
-		$structure = $this->getStructure();
-
-		$maxVersion = max(array_keys($structure));
+		/**
+		 * Check downgrade
+		 */
 		if ($versionNumber !== null) {
-			$this->logger->output('Migration to version number' . $versionNumber, false, ColorEnum::CYAN);
+			$this->logger->output('Migrating to version number ' . $versionNumber, false, ColorEnum::CYAN);
 
-			// downgrade WIP
+			$migrations = $this->getMigrationsForDowngrade($versionNumber);
+			foreach ($migrations as $version => $names) {
+				$this->logger->output('Downgrading version ' . $version, false, ColorEnum::MAGENTA);
+
+				foreach ($names as $name) {
+					try {
+						$this->downgradeFile((int) $version, $name);
+					} catch (Exception $e) {
+						if ($e->getCode() === Exception::MISSING_FILE || $e->getCode() === Exception::EMPTY_FILE) {
+							$this->deleteMigrationRow($version, $name);
+							$this->logger->output('NON EXISTING', true, ColorEnum::RED);
+							continue;
+						}
+
+						throw $e;
+					}
+				}
+			}
 		}
+
+		$structure = $this->getStructure();
 
 		$applied = 0;
 		foreach ($structure as $version => $names) {
+			if ($versionNumber !== null && $version > $versionNumber) {
+				break;
+			}
+
 			$this->logger->output('Applying version ' . $version, false, ColorEnum::MAGENTA);
 
 			foreach ($names as $name) {
@@ -377,6 +400,47 @@ class Migration
 		$this->logger->output($downgrade ? 'DOWNGRADED' : 'MIGRATED', true, ColorEnum::GREEN);
 
 		return true;
+	}
+
+	/**
+	 * Delete migration row
+	 */
+	protected function deleteMigrationRow(string | int $versionNumber, string $name): void
+	{
+		$prepare = $this->pdo->prepare(<<<SQL
+			DELETE FROM "{$this->tableName}"
+			WHERE "version" = ? AND "name" = ?
+		SQL);
+		$prepare->execute([
+			$versionNumber,
+			$name,
+		]);
+	}
+
+	/**
+	 * Get applied migrations for downgrade
+	 */
+	public function getMigrationsForDowngrade(string $versionNumber): array
+	{
+		$prepare = $this->pdo->prepare(<<<SQL
+			SELECT *
+			FROM "{$this->tableName}"
+			WHERE "version" > ?
+			ORDER BY "version" DESC, "name" DESC
+		SQL);
+
+		$prepare->execute([
+			$versionNumber,
+		]);
+
+		$resultset = $prepare->fetchAll(PDO::FETCH_ASSOC);
+
+		$structure = [];
+		foreach ($resultset as $row) {
+			$structure[$this->versionPad($row['version'])][] = $row['name'];
+		}
+
+		return $structure;
 	}
 
 	/**
