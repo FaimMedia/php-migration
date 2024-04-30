@@ -14,6 +14,8 @@ use FaimMedia\Migration\Logger\{
  */
 class Color implements LoggerInterface
 {
+	protected string $prevMessage;
+
 	/**
 	 * Output message
 	 */
@@ -23,26 +25,24 @@ class Color implements LoggerInterface
 		ColorEnum $color = null,
 	): void
 	{
-		if ($previousLine) {
-			echo chr(27) . "[u";
-			echo chr(27) . "[A";
-			echo " ";
-		}
-
 		$output = '';
 
+		if ($previousLine) {
+			//$output = chr(27) . "[u";
+			$output .= chr(27) . "[1A";
+			$output .= $this->prevMessage . ' ';
+		}
+
 		if ($color) {
-			$message = chr(27) . "[" . $color->value . "m" . $message;
+			$message = chr(27) . "[" . $color->value . "m" . $message  . chr(27) . "[0m";
+		}
+
+		if (!$previousLine) {
+			$this->prevMessage = $message;
 		}
 
 		$output .= $message;
 
-		if (!$previousLine) {
-			$output .= chr(27) . "[s";
-		}
-
-		$output .= chr(27) . "[0m\n";
-
-		echo $output;
+		echo $output . PHP_EOL;
 	}
 }
