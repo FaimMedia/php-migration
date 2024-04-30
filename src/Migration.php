@@ -121,9 +121,33 @@ class Migration
 	}
 
 	/**
-	 * Run migrations
+	 * Run with transaction
 	 */
 	public function run(string $versionNumber = null): void
+	{
+		if ($this->useTransaction) {
+			$this->pdo->beginTransaction();
+		}
+
+		try {
+			$this->runMigration($versionNumber);
+		} catch (Exception $e) {
+			if ($this->useTransaction) {
+				$this->pdo->rollBack();
+			}
+
+			throw $e;
+		}
+
+		if ($this->useTransaction) {
+			$this->pdo->commit();
+		}
+	}
+
+	/**
+	 * Run migrations
+	 */
+	protected function runMigration(string $versionNumber = null): void
 	{
 		if ($versionNumber) {
 			$this->validateVersion($versionNumber);
