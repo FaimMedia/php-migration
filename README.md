@@ -76,3 +76,9 @@ Run tests:
 ```bash
 ./bin/test
 ```
+
+Run migration CLI:
+
+```bash
+docker compose exec -T test /app/bin/migrate --dsn=pgsql:host=postgres --username=migrate-test --path=/app/test/sql
+```
