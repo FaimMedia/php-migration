@@ -333,17 +333,6 @@ class Migration
 			);
 		}
 
-		$fopen = fopen($file, 'r');
-		$content = trim(fread($fopen, max(filesize($file), 0, 1)));
-		fclose($fopen);
-
-		if (!$content) {
-			throw new Exception(
-				'SQL file is empty: `' . $fileName . '`',
-				Exception::EMPTY_FILE,
-			);
-		}
-
 		/**
 		 * We skip transactional usage, if an transaction is already triggered
 		 */
@@ -353,18 +342,7 @@ class Migration
 			$this->pdo->beginTransaction();
 		}
 
-		try {
-			$this->pdo->exec($content);
-		} catch (PDOException $e) {
-			$this->logger->output('ERROR', true, ColorEnum::RED);
-			$this->logger->output(' - PDO Error: ' . $e->getMessage());
-
-			if ($useTransaction) {
-				$this->pdo->rollBack();
-			}
-
-			throw $e;
-		}
+		$this->importSqlFile($file);
 
 		/**
 		 * Remove row from applied
@@ -403,6 +381,43 @@ class Migration
 		$this->logger->output($downgrade ? 'DOWNGRADED' : 'MIGRATED', true, ColorEnum::GREEN);
 
 		return true;
+	}
+
+	/**
+	 * Import file
+	 */
+	public function importSqlFile(string $fileName): void
+	{
+		if (!file_exists($fileName)) {
+			throw new Exception(
+				'File `' . $fileName . '` does not exist and cannot be imported',
+				Exception::MISSING_FILE,
+			);
+		}
+
+		$fopen = fopen($fileName, 'r');
+		$content = trim(fread($fopen, max(filesize($fileName), 0, 1)));
+		fclose($fopen);
+
+		if (!$content) {
+			throw new Exception(
+				'SQL file is empty: `' . $fileName . '`',
+				Exception::EMPTY_FILE,
+			);
+		}
+
+		try {
+			$this->pdo->exec($content);
+		} catch (PDOException $e) {
+			$this->logger->output('ERROR', true, ColorEnum::RED);
+			$this->logger->output(' - PDO Error: ' . $e->getMessage());
+
+			if ($this->pdo->inTransaction()) {
+				$this->pdo->rollBack();
+			}
+
+			throw $e;
+		}
 	}
 
 	/**
