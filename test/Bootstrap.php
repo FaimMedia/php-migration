@@ -27,6 +27,10 @@ $pdo = new PDO(
 	],
 );
 
+$pdo->beginTransaction();
+
+$pdo->query("SET session_replication_role = 'replica';");
+
 $query = $pdo->query(<<<SQL
 	SELECT table_schema, table_name
 	FROM information_schema.tables
@@ -35,5 +39,9 @@ $query = $pdo->query(<<<SQL
 SQL);
 
 foreach ($query->fetchAll(PDO::FETCH_ASSOC) as $result) {
-	$pdo->query('TRUNCATE "' . $result['table_schema'] . '"."' . $result['table_name'] . '" RESTART IDENTITY CASCADE;');
+	$pdo->query('DROP TABLE "' . $result['table_schema'] . '"."' . $result['table_name'] . '" CASCADE;');
 }
+
+$pdo->query("SET session_replication_role = 'origin';");
+
+$pdo->commit();
