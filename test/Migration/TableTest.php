@@ -147,6 +147,18 @@ class TableTest extends AbstractTestCase
 	}
 
 	/**
+	 * Test empty migration rollback
+	 */
+	public function testEmptyFile(): void
+	{
+		parent::expectException(Exception::class);
+		parent::expectExceptionCode(Exception::EMPTY_FILE);
+
+		$this->migration->run('0003');
+		$this->migration->downgradeFile(0002, '2test');
+	}
+
+	/**
 	 * Already applied migration
 	 */
 	public function testAlreadyAppliedMigration(): void
