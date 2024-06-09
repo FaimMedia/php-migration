@@ -6,11 +6,17 @@ use FaimMedia\Migration\Migration;
 define('ROOT_PATH', realpath(__DIR__ . '/..') . '/');
 define('SOURCE_PATH', ROOT_PATH . 'src/');
 define('TEST_PATH', realpath(__DIR__) . '/');
+define(
+	'VENDOR_PATH',
+	$_ENV['COMPOSER_RUNTIME_BIN_DIR']
+		? realpath($_ENV['COMPOSER_RUNTIME_BIN_DIR'] . '/..') . '/'
+		: ROOT_PATH . 'vendor/',
+);
 
 define('PDO_USERNAME', 'migrate-test');
 define('PDO_DATABASE', 'migrate-test');
 
-require ROOT_PATH . 'vendor/autoload.php';
+require VENDOR_PATH . 'autoload.php';
 
 $required = [
 	'dsn',
