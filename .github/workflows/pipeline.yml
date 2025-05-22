@@ -99,7 +99,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: coverage
-          path: /app/test/coverage/
+          path: |
+            /app/test/coverage/
+            !/app/test/coverage/coverage.txt
           retention-days: 5
 
   test-coverage:
@@ -107,6 +109,8 @@ jobs:
       - test
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
       - name: Download coverage
         uses: actions/download-artifact@v4
         with:
