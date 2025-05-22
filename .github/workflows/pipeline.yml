@@ -79,7 +79,7 @@ jobs:
         password: ${{ secrets.github_token }}
     services:
       postgres:
-        image: postgres:16-alpine3.19
+        image: postgres:16-alpine3.21
         env:
           POSTGRES_HOST_AUTH_METHOD: trust
           POSTGRES_USER: migrate-test
@@ -95,4 +95,3 @@ jobs:
         run: chmod +x /app/vendor/bin/phpunit
       - name: Run tests
         run: /app/vendor/bin/phpunit -c /app/test/phpunit.xml
-        
