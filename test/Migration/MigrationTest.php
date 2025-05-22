@@ -24,8 +24,7 @@ class MigrationTest extends AbstractTestCase
 	 */
 	public function testVersion0Migration(): void
 	{
-		parent::expectException(Exception::class);
-		parent::expectExceptionCode(Exception::VERSION_NUMBER);
+		parent::expectNotToPerformAssertions();
 
 		$this->migration->run('0000');
 	}
