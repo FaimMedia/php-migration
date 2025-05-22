@@ -538,7 +538,7 @@ class Migration
 	}
 
 	/**
-	 * Get connected PDO driver for manually executing 
+	 * Get connected PDO driver for manually executing
 	 */
 	public function getPdo(): PDO
 	{
