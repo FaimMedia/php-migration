@@ -1,4 +1,4 @@
-name: CI
+name: Pipeline
 
 # Controls when the workflow will run
 on:
