@@ -95,3 +95,15 @@ jobs:
         run: chmod +x /app/vendor/bin/phpunit
       - name: Run tests
         run: /app/vendor/bin/phpunit -c /app/test/phpunit.xml
+      - name: Upload code coverage
+        uses: codecov/codecov-action@v3
+        with:
+          files: /app/coverage/clover.xml
+          flags: unittests
+          name: phpunit-coverage
+      - name: Generate coverage badge
+        uses: timkrase/phpunit-coverage-badge@v1.2.0
+        with:
+          coverage_badge_path: 'badge-coverage.svg'
+          push_badge: true
+          repo_token: ${{ secrets.GITHUB_TOKEN }}

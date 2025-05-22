@@ -1,5 +1,7 @@
 # FaimMedia PHP Migration
 
+![Coverage](https://raw.githubusercontent.com/FaimMedia/php-migration/main/badge-coverage.svg)
+
 Simple PHP migration library to use with any available PHP PDO driver.
 
 ## Install & usage
