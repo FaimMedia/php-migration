@@ -1,5 +1,4 @@
 /.github
-/docker
 Dockerfile
 /composer.json
 /composer.lock
