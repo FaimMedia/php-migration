@@ -515,4 +515,33 @@ class Migration
 	{
 		return str_pad((string) $version, 4, '0', STR_PAD_LEFT);
 	}
+
+	/**
+ 	 * Execute query with connected PDO driver
+	 *
+	 * @throws PDOException
+   	 */
+	public function query(
+		string $statement,
+		array $bind = [],
+		bool $select = false,
+	): array | int | bool
+	{
+		$prepare = $this->pdo->prepare($statement);
+
+		$result = $prepare->execute($bind);
+		if (!$select) {
+			return $result;
+		}
+
+		return $prepare->fetchAll(PDO::FETCH_ASSOC);
+	}
+
+	/**
+	 * Get connected PDO driver for manually executing 
+	 */
+	public function getPdo(): PDO
+	{
+		return $this->pdo;
+	}
 }
