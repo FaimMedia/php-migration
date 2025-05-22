@@ -18,8 +18,8 @@ class ImportTest extends AbstractTestCase
 	{
 		$this->migration->importSqlFile(TEST_PATH . 'sql/.random-1.sql');
 
-		parent::assertTrue(parent::tableExists('my_new_table'));
-		parent::assertFalse(parent::tableExists('my_random_table'));
+		parent::assertTableExists('my_new_table');
+		parent::assertTableNotExists('my_random_table');
 	}
 
 	/**
@@ -29,8 +29,8 @@ class ImportTest extends AbstractTestCase
 	{
 		$this->migration->importSqlFile(TEST_PATH . 'sql/.random-2.sql');
 
-		parent::assertFalse(parent::tableExists('my_new_table'));
-		parent::assertTrue(parent::tableExists('my_random_table'));
+		parent::assertTableNotExists('my_new_table');
+		parent::assertTableExists('my_random_table');
 	}
 
 	/**

@@ -67,6 +67,22 @@ abstract class AbstractTestCase extends TestCase
 	}
 
 	/**
+	 * Assert table exists
+	 */
+	protected function assertTableExists(string $table): void
+	{
+		parent::assertTrue($this->tableExists($table));
+	}
+
+	/**
+	 * Assert table does not exists
+	 */
+	protected function assertTableNotExists(string $table): void
+	{
+		parent::assertFalse($this->tableExists($table));
+	}
+
+	/**
 	 * Migration exists
 	 */
 	protected function migrationExists(
