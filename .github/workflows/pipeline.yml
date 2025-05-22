@@ -101,6 +101,8 @@ jobs:
           files: /app/test/coverage/clover.xml
           flags: unittests
           name: phpunit-coverage
+      - name: Fix coverage file for badge generation
+        run: cp /app/test/coverage/clover.xml ${{ github.workspace }}/clover.xml
       - name: Generate coverage badge
         uses: timkrase/phpunit-coverage-badge@v1.2.0
         with:
