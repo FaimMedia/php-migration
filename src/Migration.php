@@ -227,13 +227,6 @@ class Migration
 			);
 		}
 
-		if (((int) $versionNumber) === 0) {
-			throw new Exception(
-				'Version number cannot be 0000',
-				Exception::VERSION_NUMBER,
-			);
-		}
-
 		$path = $this->path . '/' . $versionNumber;
 		if (!file_exists($path) || !is_dir($path)) {
 			throw new Exception(
