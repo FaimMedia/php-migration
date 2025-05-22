@@ -19,7 +19,7 @@
 	"require-dev": {
 		"ext-pdo_pgsql": "*",
 		"ext-pgsql": "*",
-		"phpunit/phpunit": "^12"
+		"phpunit/phpunit": "^11.3"
 	},
 
 	"bin": [
@@ -31,5 +31,9 @@
 			"FaimMedia\\Migration\\": "src/",
 			"FaimMedia\\Migration\\Test\\": "test/"
 		}
+	},
+
+	"config": {
+		"lock": false
 	}
 }
