@@ -1,4 +1,4 @@
 /vendor/
 /cache/
 /docker-compose.override.yml
-/coverage
+/test/coverage

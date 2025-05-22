@@ -19,7 +19,8 @@
 	"require-dev": {
 		"ext-pdo_pgsql": "*",
 		"ext-pgsql": "*",
-		"phpunit/phpunit": "^11.3"
+		"phpunit/phpunit": "^11.5",
+		"phpunit/php-code-coverage": "^11.0"
 	},
 
 	"bin": [

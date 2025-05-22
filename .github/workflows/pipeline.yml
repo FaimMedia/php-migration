@@ -98,7 +98,7 @@ jobs:
       - name: Upload code coverage
         uses: codecov/codecov-action@v3
         with:
-          files: /app/coverage/clover.xml
+          files: /app/test/coverage/clover.xml
           flags: unittests
           name: phpunit-coverage
       - name: Generate coverage badge

@@ -123,7 +123,7 @@ class Migration
 	/**
 	 * Run with transaction
 	 */
-	public function run(string $versionNumber = null): void
+	public function run(?string $versionNumber = null): void
 	{
 		if ($this->useTransaction) {
 			$this->pdo->beginTransaction();
@@ -147,7 +147,7 @@ class Migration
 	/**
 	 * Run migrations
 	 */
-	protected function runMigration(string $versionNumber = null): void
+	protected function runMigration(?string $versionNumber = null): void
 	{
 		if ($versionNumber) {
 			$this->validateVersion($versionNumber);

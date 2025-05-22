@@ -3,8 +3,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.3/phpunit.xsd"
 	backupGlobals="true"
-	bootstrap="./Bootstrap.php"
-	cacheResultFile="../cache/phpunit/result.json"
+	bootstrap="Bootstrap.php"
 	colors="true"
 	processIsolation="false"
 	stopOnError="false"
@@ -15,21 +14,27 @@
 	cacheDirectory="../cache/phpunit/"
 	backupStaticProperties="false"
 	requireCoverageMetadata="false"
+	displayDetailsOnTestsThatTriggerDeprecations="true"
+	displayDetailsOnTestsThatTriggerErrors="true"
+	displayDetailsOnTestsThatTriggerNotices="true"
+	displayDetailsOnTestsThatTriggerWarnings="true"
+	displayDetailsOnPhpunitDeprecations="true"
 >
+	<source>
+		<include>
+    		<directory suffix=".php">../src/</directory>
+		</include>
+		<exclude>
+			<file>../src/Run.php</file>
+			<file>../src/Logger/Color.php</file>
+		</exclude>
+	</source>
 	<testsuites>
 		<testsuite name="migration">
 			<directory>./Migration</directory>
 		</testsuite>
 	</testsuites>
-	<source>
-		<include>
-    		<directory suffix=".php">test</directory>
-		</include>
-	</source>
- 	<coverage processUncoveredFiles="true" pathCoverage="true" cacheDirectory="cache/phpunit">
-        <include>
-            <directory suffix=".php">src/</directory>
-        </include>
+ 	<coverage pathCoverage="false" includeUncoveredFiles="true">
 		<report>
             <clover outputFile="coverage/clover.xml" />
             <text outputFile="coverage/coverage.txt" showUncoveredFiles="false" showOnlySummary="true" />

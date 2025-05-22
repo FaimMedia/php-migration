@@ -32,6 +32,8 @@ final class HelperTest extends AbstractTestCase
 	*/
 	public function testPdoInsert(): void
 	{
+		$this->migration->run('0000');
+
 		$result = $this->migration->query(
 			<<<SQL
 				INSERT INTO "always_run" ("col1", "col2")
@@ -51,12 +53,24 @@ final class HelperTest extends AbstractTestCase
 	 */
 	public function testPdo(): void
 	{
+		$this->migration->run('0000');
+
 		$pdo = $this->migration->getPdo();
 
 		parent::assertInstanceOf(PDO::class, $pdo);
 
-		$result = $pdo->exec('SELECT 1+1');
+		$stmt = $pdo->prepare(
+			'SELECT * FROM "always_run" WHERE "col1" = :col',
+		);
 
-		parent::assertSame(1, $result);
+		$result = $stmt->execute([
+			'col' => 'key1',
+		]);
+
+		$result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+		parent::assertIsArray($result);
+		parent::assertArrayHasKey('col1', $result);
+		parent::assertArrayHasKey('col2', $result);
 	}
 }
