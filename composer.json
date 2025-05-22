@@ -3,7 +3,7 @@
 	"type": "library",
 	"license": "MIT",
 	"description": "FaimMedia Simple PHP Database Migration",
-	"version": "0.2",
+	"version": "0.3",
 	"homepage": "https://faimmedia.nl",
 
 	"authors": [{
