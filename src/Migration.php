@@ -123,7 +123,7 @@ class Migration
 	/**
 	 * Run with transaction
 	 */
-	public function run(string $versionNumber = null): void
+	public function run(?string $versionNumber = null): void
 	{
 		if ($this->useTransaction) {
 			$this->pdo->beginTransaction();
@@ -147,7 +147,7 @@ class Migration
 	/**
 	 * Run migrations
 	 */
-	protected function runMigration(string $versionNumber = null): void
+	protected function runMigration(?string $versionNumber = null): void
 	{
 		if ($versionNumber) {
 			$this->validateVersion($versionNumber);
@@ -223,13 +223,6 @@ class Migration
 		if (!ctype_digit($versionNumber) || strlen($versionNumber) !== 4) {
 			throw new Exception(
 				'Version number should be a string of 4 digits, example: 0001',
-				Exception::VERSION_NUMBER,
-			);
-		}
-
-		if (((int) $versionNumber) === 0) {
-			throw new Exception(
-				'Version number cannot be 0000',
 				Exception::VERSION_NUMBER,
 			);
 		}
@@ -521,5 +514,34 @@ class Migration
 	public function versionPad(int | string $version): string
 	{
 		return str_pad((string) $version, 4, '0', STR_PAD_LEFT);
+	}
+
+	/**
+ 	 * Execute query with connected PDO driver
+	 *
+	 * @throws PDOException
+   	 */
+	public function query(
+		string $statement,
+		array $bind = [],
+		bool $select = false,
+	): array | bool
+	{
+		$prepare = $this->pdo->prepare($statement);
+
+		$result = $prepare->execute($bind);
+		if (!$select) {
+			return $result;
+		}
+
+		return $prepare->fetchAll(PDO::FETCH_ASSOC);
+	}
+
+	/**
+	 * Get connected PDO driver for manually executing
+	 */
+	public function getPdo(): PDO
+	{
+		return $this->pdo;
 	}
 }

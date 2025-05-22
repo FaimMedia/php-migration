@@ -20,7 +20,7 @@ class Noop implements LoggerInterface
 	public function output(
 		string $message,
 		bool $previousLine = false,
-		ColorEnum $color = null,
+		?ColorEnum $color = null,
 	): void
 	{
 	}

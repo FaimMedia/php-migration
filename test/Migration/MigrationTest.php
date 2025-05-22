@@ -24,8 +24,7 @@ class MigrationTest extends AbstractTestCase
 	 */
 	public function testVersion0Migration(): void
 	{
-		parent::expectException(Exception::class);
-		parent::expectExceptionCode(Exception::VERSION_NUMBER);
+		parent::expectNotToPerformAssertions();
 
 		$this->migration->run('0000');
 	}
@@ -37,7 +36,7 @@ class MigrationTest extends AbstractTestCase
 	{
 		$this->migration->run('0001');
 
-		parent::assertTrue(parent::tableExists('always_run'));
+		parent::assertTableExists('always_run');
 	}
 
 	/**
@@ -49,11 +48,11 @@ class MigrationTest extends AbstractTestCase
 
 		$this->pdo->query('DROP TABLE "always_run"');
 
-		parent::assertFalse(parent::tableExists('always_run'));
+		parent::assertTableNotExists('always_run');
 
 		$this->migration->run("0001");
 
-		parent::assertTrue(parent::tableExists('always_run'));
+		parent::assertTableExists('always_run');
 	}
 
 	/**
@@ -100,16 +99,23 @@ class MigrationTest extends AbstractTestCase
 	 */
 	public function testFullMigration(): void
 	{
+		parent::assertTableNotExists('test');
+		parent::assertTableNotExists('test_1');
+		parent::assertTableNotExists('test_2');
+		parent::assertTableNotExists('test_3');
+		parent::assertTableNotExists('test_4');
+		parent::assertTableNotExists('new_table');
+
 		$this->migration->run();
 
 		parent::assertSame($this->migrationCount(), 4);
 
-		parent::assertTrue(parent::tableExists('test'));
-		parent::assertTrue(parent::tableExists('test_1'));
-		parent::assertTrue(parent::tableExists('test_2'));
-		parent::assertTrue(parent::tableExists('test_3'));
-		parent::assertTrue(parent::tableExists('test_4'));
-		parent::assertTrue(parent::tableExists('new_table'));
+		parent::assertTableExists('test');
+		parent::assertTableExists('test_1');
+		parent::assertTableExists('test_2');
+		parent::assertTableExists('test_3');
+		parent::assertTableExists('test_4');
+		parent::assertTableExists('new_table');
 	}
 
 	/**
@@ -121,13 +127,13 @@ class MigrationTest extends AbstractTestCase
 
 		parent::assertSame($this->migrationCount(), 1);
 
-		parent::assertTrue(parent::tableExists('test'));
+		parent::assertTableExists('test');
 
-		parent::assertFalse(parent::tableExists('test_1'));
-		parent::assertFalse(parent::tableExists('test_2'));
-		parent::assertFalse(parent::tableExists('test_3'));
-		parent::assertFalse(parent::tableExists('test_4'));
-		parent::assertFalse(parent::tableExists('new_table'));
+		parent::assertTableNotExists('test_1');
+		parent::assertTableNotExists('test_2');
+		parent::assertTableNotExists('test_3');
+		parent::assertTableNotExists('test_4');
+		parent::assertTableNotExists('new_table');
 	}
 
 	/**
@@ -143,7 +149,7 @@ class MigrationTest extends AbstractTestCase
 
 		parent::assertSame($this->migrationCount(), 3);
 
-		parent::assertFalse(parent::tableExists('new_table'));
+		parent::assertTableNotExists('new_table');
 	}
 
 	/**
@@ -162,11 +168,42 @@ class MigrationTest extends AbstractTestCase
 		/**
 		 * Migration version 2 has empty down files, so tables should still exist
 		 */
-		parent::assertTrue(parent::tableExists('test_1'));
-		parent::assertTrue(parent::tableExists('test_2'));
-		parent::assertTrue(parent::tableExists('test_3'));
-		parent::assertTrue(parent::tableExists('test_4'));
+		parent::assertTableExists('test_1');
+		parent::assertTableExists('test_2');
+		parent::assertTableExists('test_3');
+		parent::assertTableExists('test_4');
 
-		parent::assertFalse(parent::tableExists('new_table'));
+		parent::assertTableNotExists('new_table');
+	}
+
+	/**
+	 * Test migration and downgrade to version 0
+	 */
+	public function testVersion0Downgrade(): void
+	{
+		$this->testFullMigration();
+
+		parent::assertSame($this->migrationCount(), 4);
+
+		parent::assertTableExists('always_run');
+
+		$this->migration->run('0000');
+
+		/**
+		 * Should be 0, because version 0000 doesn't get inserted
+		 */
+		parent::assertSame($this->migrationCount(), 0);
+
+		/**
+		 * Migration version 2 has empty down files, so tables should still exist
+		 */
+		parent::assertTableExists('test_1');
+		parent::assertTableExists('test_2');
+		parent::assertTableExists('test_3');
+		parent::assertTableExists('test_4');
+		parent::assertTableExists('always_run');
+
+		parent::assertTableNotExists('new_table');
+		parent::assertTableNotExists('test');
 	}
 }
