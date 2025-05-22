@@ -95,16 +95,29 @@ jobs:
         run: chmod +x /app/vendor/bin/phpunit
       - name: Run tests
         run: /app/vendor/bin/phpunit -c /app/test/phpunit.xml
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: /app/test/coverage/clover.xml
+          retention-days: 5
+
+  test-coverage:
+    needs:
+      - test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download coverage
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage
+          path: clover.xml
       - name: Upload code coverage
         uses: codecov/codecov-action@v5
         with:
-          files: /app/test/coverage/clover.xml
+          files: clover.xml
           flags: unittests
           name: phpunit-coverage
-      - name: Create workspace folder
-        run: mkdir -p ${{ github.workspace }}
-      - name: Move coverage file
-        run: cp /app/test/coverage/clover.xml ${{ github.workspace }}/clover.xml
       - name: Generate coverage badge
         uses: timkrase/phpunit-coverage-badge@v1.2.0
         with:
