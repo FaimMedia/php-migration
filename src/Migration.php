@@ -525,7 +525,7 @@ class Migration
 		string $statement,
 		array $bind = [],
 		bool $select = false,
-	): array | int | bool
+	): array | bool
 	{
 		$prepare = $this->pdo->prepare($statement);
 
