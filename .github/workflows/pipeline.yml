@@ -101,11 +101,10 @@ jobs:
           files: /app/test/coverage/clover.xml
           flags: unittests
           name: phpunit-coverage
-      - name: Move coverage file
-        run: cp /app/test/coverage/clover.xml ${{ github.workspace }}/clover.xml
       - name: Generate coverage badge
         uses: timkrase/phpunit-coverage-badge@v1.2.0
         with:
+          report: test/coverage/clover.xml
           coverage_badge_path: 'badge-coverage.svg'
           push_badge: true
           repo_token: ${{ secrets.GITHUB_TOKEN }}
