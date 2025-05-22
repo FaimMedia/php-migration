@@ -101,8 +101,6 @@ jobs:
           files: /app/test/coverage/clover.xml
           flags: unittests
           name: phpunit-coverage
-      # - name: Create badge path
-      #   run: mkdir -p /github/workspace
       - name: Move coverage file
         run: cp /app/test/coverage/clover.xml ${{ github.workspace }}/clover.xml
       - name: Generate coverage badge
