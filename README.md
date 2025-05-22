@@ -1,6 +1,6 @@
 # FaimMedia PHP Migration
 
-![Coverage](https://raw.githubusercontent.com/FaimMedia/php-migration/main/badge-coverage.svg)
+![Coverage](https://raw.githubusercontent.com/FaimMedia/php-migration/master/badge-coverage.svg)
 [![Pipeline](https://github.com/FaimMedia/php-migration/actions/workflows/pipeline.yml/badge.svg?branch=master)](https://github.com/FaimMedia/php-migration/actions/workflows/pipeline.yml)
 
 Simple PHP migration library to use with any available PHP PDO driver.
