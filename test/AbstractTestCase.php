@@ -88,7 +88,7 @@ abstract class AbstractTestCase extends TestCase
 	protected function migrationExists(
 		string $versionNumber,
 		string $name,
-		string $startTime = null,
+		?string $startTime = null,
 	): array | false
 	{
 		$query = <<<SQL
@@ -112,7 +112,7 @@ abstract class AbstractTestCase extends TestCase
 	/**
 	 * Migration count
 	 */
-	protected function migrationCount(string $startTime = null): int
+	protected function migrationCount(?string $startTime = null): int
 	{
 		$query = <<<SQL
 			SELECT COUNT(1) c
