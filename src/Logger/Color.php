@@ -27,7 +27,7 @@ class Color implements LoggerInterface
 	{
 		$output = '';
 
-		if ($previousLine) {
+		if ($previousLine && isset($this->prevMessage)) {
 			$output .= chr(27) . "[1A";
 			$output .= $this->prevMessage . ' ';
 		}
